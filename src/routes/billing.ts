@@ -7,7 +7,8 @@ import {
   getPayments,
   getServiceCharges,
 } from '../controllers/billing';
-import { authenticateToken, requireRole } from '../middleware/auth';
+import { authenticateToken } from '../middleware/auth';
+import { requirePermission, PERMISSIONS } from '../middleware/permissions';
 import { validateRequest } from '../middleware/validation';
 import { auditLogger } from '../middleware/audit';
 import { billingValidation, paymentValidation } from '../utils/validation';
@@ -20,7 +21,7 @@ router.use(authenticateToken);
 // Bill management routes
 router.post(
   '/bills',
-  requireRole(['admin', 'doctor', 'cashier']),
+  requirePermission(PERMISSIONS.BILLING.CREATE.resource, PERMISSIONS.BILLING.CREATE.action),
   validateRequest(billingValidation.create),
   auditLogger('create', 'bill'),
   createBill
@@ -28,20 +29,20 @@ router.post(
 
 router.get(
   '/bills',
-  requireRole(['admin', 'doctor', 'cashier']),
+  requirePermission(PERMISSIONS.BILLING.READ.resource, PERMISSIONS.BILLING.READ.action),
   getBills
 );
 
 router.get(
   '/bills/:id',
-  requireRole(['admin', 'doctor', 'cashier']),
+  requirePermission(PERMISSIONS.BILLING.READ.resource, PERMISSIONS.BILLING.READ.action),
   getBillById
 );
 
 // Payment management routes
 router.post(
   '/payments',
-  requireRole(['admin', 'cashier']),
+  requirePermission(PERMISSIONS.PAYMENTS.CREATE.resource, PERMISSIONS.PAYMENTS.CREATE.action),
   validateRequest(paymentValidation.create),
   auditLogger('create', 'payment'),
   createPayment
@@ -49,14 +50,14 @@ router.post(
 
 router.get(
   '/payments',
-  requireRole(['admin', 'cashier']),
+  requirePermission(PERMISSIONS.PAYMENTS.READ.resource, PERMISSIONS.PAYMENTS.READ.action),
   getPayments
 );
 
 // Service charges routes
 router.get(
   '/service-charges',
-  requireRole(['admin', 'doctor', 'cashier']),
+  requirePermission(PERMISSIONS.BILLING.READ.resource, PERMISSIONS.BILLING.READ.action),
   getServiceCharges
 );
 

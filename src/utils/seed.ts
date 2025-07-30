@@ -102,20 +102,170 @@ export const seedDatabase = async () => {
       }).onConflictDoNothing();
     }
 
-    // Seed basic permissions
-    const basicPermissions = [
+    // Seed comprehensive permissions
+    const allPermissions = [
+      // Patient Management
       { name: 'patients:create', description: 'Create patients', resource: 'patients', action: 'create' },
       { name: 'patients:read', description: 'Read patients', resource: 'patients', action: 'read' },
       { name: 'patients:update', description: 'Update patients', resource: 'patients', action: 'update' },
       { name: 'patients:delete', description: 'Delete patients', resource: 'patients', action: 'delete' },
+      { name: 'patients:search', description: 'Search patients', resource: 'patients', action: 'search' },
+      
+      // Medical Records
+      { name: 'medical_records:create', description: 'Create medical records', resource: 'medical_records', action: 'create' },
+      { name: 'medical_records:read', description: 'Read medical records', resource: 'medical_records', action: 'read' },
+      { name: 'medical_records:update', description: 'Update medical records', resource: 'medical_records', action: 'update' },
+      { name: 'medical_records:delete', description: 'Delete medical records', resource: 'medical_records', action: 'delete' },
+      
+      // Billing & Payments
       { name: 'bills:create', description: 'Create bills', resource: 'bills', action: 'create' },
       { name: 'bills:read', description: 'Read bills', resource: 'bills', action: 'read' },
+      { name: 'bills:update', description: 'Update bills', resource: 'bills', action: 'update' },
+      { name: 'bills:delete', description: 'Delete bills', resource: 'bills', action: 'delete' },
+      { name: 'bills:approve', description: 'Approve bills', resource: 'bills', action: 'approve' },
+      
       { name: 'payments:create', description: 'Process payments', resource: 'payments', action: 'create' },
       { name: 'payments:read', description: 'Read payments', resource: 'payments', action: 'read' },
+      { name: 'payments:refund', description: 'Process refunds', resource: 'payments', action: 'refund' },
+      
+      // Dental Department
+      { name: 'dental:create', description: 'Create dental records', resource: 'dental', action: 'create' },
+      { name: 'dental:read', description: 'Read dental records', resource: 'dental', action: 'read' },
+      { name: 'dental:update', description: 'Update dental records', resource: 'dental', action: 'update' },
+      { name: 'dental:delete', description: 'Delete dental records', resource: 'dental', action: 'delete' },
+      { name: 'dental:appointments', description: 'Manage dental appointments', resource: 'dental', action: 'appointments' },
+      { name: 'dental:xrays', description: 'Manage dental X-rays', resource: 'dental', action: 'xrays' },
+      
+      // Inpatient Care
+      { name: 'inpatient:create', description: 'Create inpatient records', resource: 'inpatient', action: 'create' },
+      { name: 'inpatient:read', description: 'Read inpatient records', resource: 'inpatient', action: 'read' },
+      { name: 'inpatient:update', description: 'Update inpatient records', resource: 'inpatient', action: 'update' },
+      { name: 'inpatient:delete', description: 'Delete inpatient records', resource: 'inpatient', action: 'delete' },
+      { name: 'inpatient:beds', description: 'Manage bed allocations', resource: 'inpatient', action: 'beds' },
+      { name: 'inpatient:discharge', description: 'Process patient discharge', resource: 'inpatient', action: 'discharge' },
+      
+      // ICU Management
+      { name: 'icu:create', description: 'Create ICU records', resource: 'icu', action: 'create' },
+      { name: 'icu:read', description: 'Read ICU records', resource: 'icu', action: 'read' },
+      { name: 'icu:update', description: 'Update ICU records', resource: 'icu', action: 'update' },
+      { name: 'icu:delete', description: 'Delete ICU records', resource: 'icu', action: 'delete' },
+      { name: 'icu:monitoring', description: 'Access ICU monitoring', resource: 'icu', action: 'monitoring' },
+      { name: 'icu:procedures', description: 'Manage ICU procedures', resource: 'icu', action: 'procedures' },
+      
+      // Pediatrics
+      { name: 'pediatrics:create', description: 'Create pediatric records', resource: 'pediatrics', action: 'create' },
+      { name: 'pediatrics:read', description: 'Read pediatric records', resource: 'pediatrics', action: 'read' },
+      { name: 'pediatrics:update', description: 'Update pediatric records', resource: 'pediatrics', action: 'update' },
+      { name: 'pediatrics:delete', description: 'Delete pediatric records', resource: 'pediatrics', action: 'delete' },
+      { name: 'pediatrics:vaccinations', description: 'Manage vaccinations', resource: 'pediatrics', action: 'vaccinations' },
+      { name: 'pediatrics:growth_charts', description: 'Manage growth charts', resource: 'pediatrics', action: 'growth_charts' },
+      
+      // Physical Therapy
+      { name: 'physical_therapy:create', description: 'Create therapy records', resource: 'physical_therapy', action: 'create' },
+      { name: 'physical_therapy:read', description: 'Read therapy records', resource: 'physical_therapy', action: 'read' },
+      { name: 'physical_therapy:update', description: 'Update therapy records', resource: 'physical_therapy', action: 'update' },
+      { name: 'physical_therapy:delete', description: 'Delete therapy records', resource: 'physical_therapy', action: 'delete' },
+      { name: 'physical_therapy:assessments', description: 'Manage PT assessments', resource: 'physical_therapy', action: 'assessments' },
+      { name: 'physical_therapy:sessions', description: 'Manage therapy sessions', resource: 'physical_therapy', action: 'sessions' },
+      
+      // User Management
+      { name: 'users:create', description: 'Create users', resource: 'users', action: 'create' },
+      { name: 'users:read', description: 'Read user information', resource: 'users', action: 'read' },
+      { name: 'users:update', description: 'Update users', resource: 'users', action: 'update' },
+      { name: 'users:delete', description: 'Delete users', resource: 'users', action: 'delete' },
+      { name: 'users:roles', description: 'Manage user roles', resource: 'users', action: 'roles' },
+      
+      // Reports & Analytics
+      { name: 'reports:read', description: 'Read reports', resource: 'reports', action: 'read' },
+      { name: 'reports:generate', description: 'Generate reports', resource: 'reports', action: 'generate' },
+      { name: 'reports:export', description: 'Export reports', resource: 'reports', action: 'export' },
+      
+      // System Administration
+      { name: 'system:config', description: 'System configuration', resource: 'system', action: 'config' },
+      { name: 'system:audit', description: 'Access audit logs', resource: 'system', action: 'audit' },
+      { name: 'system:backup', description: 'System backup operations', resource: 'system', action: 'backup' },
     ];
 
-    for (const permission of basicPermissions) {
+    for (const permission of allPermissions) {
       await db.insert(permissions).values(permission).onConflictDoNothing();
+    }
+
+    // Assign permissions to roles
+    const rolePermissionMappings = {
+      admin: [
+        // Admins have all permissions (handled by middleware, but we'll assign some for completeness)
+        'patients:create', 'patients:read', 'patients:update', 'patients:delete', 'patients:search',
+        'bills:create', 'bills:read', 'bills:update', 'bills:delete', 'bills:approve',
+        'payments:create', 'payments:read', 'payments:refund',
+        'users:create', 'users:read', 'users:update', 'users:delete', 'users:roles',
+        'reports:read', 'reports:generate', 'reports:export',
+        'system:config', 'system:audit', 'system:backup',
+      ],
+      doctor: [
+        'patients:create', 'patients:read', 'patients:update', 'patients:search',
+        'medical_records:create', 'medical_records:read', 'medical_records:update',
+        'bills:create', 'bills:read',
+        'dental:create', 'dental:read', 'dental:update', 'dental:appointments', 'dental:xrays',
+        'inpatient:create', 'inpatient:read', 'inpatient:update', 'inpatient:discharge',
+        'icu:create', 'icu:read', 'icu:update', 'icu:procedures',
+        'pediatrics:create', 'pediatrics:read', 'pediatrics:update', 'pediatrics:vaccinations', 'pediatrics:growth_charts',
+        'physical_therapy:read', 'physical_therapy:assessments',
+        'reports:read',
+      ],
+      nurse: [
+        'patients:create', 'patients:read', 'patients:update', 'patients:search',
+        'medical_records:create', 'medical_records:read', 'medical_records:update',
+        'inpatient:create', 'inpatient:read', 'inpatient:update', 'inpatient:beds',
+        'icu:read', 'icu:update', 'icu:monitoring',
+        'pediatrics:read', 'pediatrics:update', 'pediatrics:vaccinations',
+        'bills:read',
+      ],
+      therapist: [
+        'patients:read', 'patients:search',
+        'medical_records:read',
+        'physical_therapy:create', 'physical_therapy:read', 'physical_therapy:update', 'physical_therapy:assessments', 'physical_therapy:sessions',
+        'reports:read',
+      ],
+      cashier: [
+        'patients:read', 'patients:search',
+        'bills:create', 'bills:read', 'bills:update',
+        'payments:create', 'payments:read',
+        'reports:read',
+      ],
+      receptionist: [
+        'patients:create', 'patients:read', 'patients:update', 'patients:search',
+        'dental:appointments',
+        'inpatient:beds',
+        'bills:read',
+      ],
+      lab_tech: [
+        'patients:read', 'patients:search',
+        'medical_records:read',
+        'reports:read',
+      ],
+      radiologist: [
+        'patients:read', 'patients:search',
+        'medical_records:read',
+        'dental:xrays',
+        'reports:read',
+      ],
+    };
+
+    // Get all permissions for ID mapping
+    const allPerms = await db.select().from(permissions);
+    const permissionMap = new Map(allPerms.map(p => [p.name, p.id]));
+
+    // Assign permissions to roles
+    for (const [roleName, permissionNames] of Object.entries(rolePermissionMappings)) {
+      for (const permissionName of permissionNames) {
+        const permissionId = permissionMap.get(permissionName);
+        if (permissionId) {
+          await db.insert(rolePermissions).values({
+            role: roleName as any,
+            permissionId,
+          }).onConflictDoNothing();
+        }
+      }
     }
 
     console.log('✅ Database seeding completed successfully!');

@@ -8,7 +8,8 @@ import {
   addMedicalRecord,
   getMedicalRecords,
 } from '../controllers/patients';
-import { authenticateToken, requireRole } from '../middleware/auth';
+import { authenticateToken } from '../middleware/auth';
+import { requirePermission, PERMISSIONS } from '../middleware/permissions';
 import { validateRequest } from '../middleware/validation';
 import { auditLogger } from '../middleware/audit';
 import { patientValidation } from '../utils/validation';
@@ -21,7 +22,7 @@ router.use(authenticateToken);
 // Patient management routes
 router.post(
   '/',
-  requireRole(['admin', 'doctor', 'nurse', 'receptionist']),
+  requirePermission(PERMISSIONS.PATIENTS.CREATE.resource, PERMISSIONS.PATIENTS.CREATE.action),
   validateRequest(patientValidation.create),
   auditLogger('create', 'patient'),
   createPatient
@@ -29,19 +30,19 @@ router.post(
 
 router.get(
   '/',
-  requireRole(['admin', 'doctor', 'nurse', 'receptionist', 'therapist', 'cashier']),
+  requirePermission(PERMISSIONS.PATIENTS.READ.resource, PERMISSIONS.PATIENTS.READ.action),
   getPatients
 );
 
 router.get(
   '/:id',
-  requireRole(['admin', 'doctor', 'nurse', 'receptionist', 'therapist', 'cashier']),
+  requirePermission(PERMISSIONS.PATIENTS.READ.resource, PERMISSIONS.PATIENTS.READ.action),
   getPatientById
 );
 
 router.put(
   '/:id',
-  requireRole(['admin', 'doctor', 'nurse', 'receptionist']),
+  requirePermission(PERMISSIONS.PATIENTS.UPDATE.resource, PERMISSIONS.PATIENTS.UPDATE.action),
   validateRequest(patientValidation.update),
   auditLogger('update', 'patient'),
   updatePatient
@@ -49,7 +50,7 @@ router.put(
 
 router.delete(
   '/:id',
-  requireRole(['admin']),
+  requirePermission(PERMISSIONS.PATIENTS.DELETE.resource, PERMISSIONS.PATIENTS.DELETE.action),
   auditLogger('delete', 'patient'),
   deletePatient
 );
@@ -57,14 +58,14 @@ router.delete(
 // Medical records routes
 router.post(
   '/:id/medical-records',
-  requireRole(['doctor', 'nurse']),
+  requirePermission(PERMISSIONS.MEDICAL_RECORDS.CREATE.resource, PERMISSIONS.MEDICAL_RECORDS.CREATE.action),
   auditLogger('create', 'medical_record'),
   addMedicalRecord
 );
 
 router.get(
   '/:id/medical-records',
-  requireRole(['admin', 'doctor', 'nurse', 'therapist']),
+  requirePermission(PERMISSIONS.MEDICAL_RECORDS.READ.resource, PERMISSIONS.MEDICAL_RECORDS.READ.action),
   getMedicalRecords
 );
 
