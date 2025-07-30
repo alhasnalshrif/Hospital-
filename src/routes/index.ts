@@ -3,12 +3,13 @@ import authRoutes from './auth';
 import patientRoutes from './patients';
 import billingRoutes from './billing';
 import demoRoutes from './demo';
-import dentalRoutes from './dental';
-import inpatientRoutes from './inpatient';
-import icuRoutes from './icu';
-import pediatricsRoutes from './pediatrics';
-import physicalTherapyRoutes from './physicalTherapy';
 import usersRoutes from './users';
+// Temporarily comment out new routes until schema alignment is fixed
+// import dentalRoutes from './dental';
+// import inpatientRoutes from './inpatient';
+// import icuRoutes from './icu';
+// import pediatricsRoutes from './pediatrics';
+// import physicalTherapyRoutes from './physicalTherapy';
 
 const router = Router();
 
@@ -20,12 +21,13 @@ router.use(`${API_VERSION}/auth`, authRoutes);
 router.use(`${API_VERSION}/patients`, patientRoutes);
 router.use(`${API_VERSION}/billing`, billingRoutes);
 router.use(`${API_VERSION}/demo`, demoRoutes);
-router.use(`${API_VERSION}/dental`, dentalRoutes);
-router.use(`${API_VERSION}/inpatient`, inpatientRoutes);
-router.use(`${API_VERSION}/icu`, icuRoutes);
-router.use(`${API_VERSION}/pediatrics`, pediatricsRoutes);
-router.use(`${API_VERSION}/physical-therapy`, physicalTherapyRoutes);
 router.use(`${API_VERSION}/users`, usersRoutes);
+// Temporarily disabled until schema alignment is fixed
+// router.use(`${API_VERSION}/dental`, dentalRoutes);
+// router.use(`${API_VERSION}/inpatient`, inpatientRoutes);
+// router.use(`${API_VERSION}/icu`, icuRoutes);
+// router.use(`${API_VERSION}/pediatrics`, pediatricsRoutes);
+// router.use(`${API_VERSION}/physical-therapy`, physicalTherapyRoutes);
 
 // Health check endpoint
 router.get('/health', (req, res) => {

@@ -11,7 +11,7 @@ export const getUsers = async (req: AuthenticatedRequest, res: Response) => {
     const { role, department, isActive, page = 1, limit = 10 } = req.query;
     const offset = (Number(page) - 1) * Number(limit);
 
-    let query = db.select({
+    let baseQuery = db.select({
       id: users.id,
       employeeId: users.employeeId,
       firstName: users.firstName,
@@ -29,23 +29,23 @@ export const getUsers = async (req: AuthenticatedRequest, res: Response) => {
     }).from(users);
 
     if (role) {
-      query = query.where(eq(users.role, role as any));
+      baseQuery = baseQuery.where(eq(users.role, role as any)) as any;
     }
 
     if (department) {
-      query = query.where(eq(users.department, department as any));
+      baseQuery = baseQuery.where(eq(users.department, department as any)) as any;
     }
 
     if (isActive !== undefined) {
-      query = query.where(eq(users.isActive, isActive === 'true'));
+      baseQuery = baseQuery.where(eq(users.isActive, isActive === 'true')) as any;
     }
 
-    const userList = await query
+    const userList = await baseQuery
       .orderBy(asc(users.lastName), asc(users.firstName))
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('Users retrieved successfully', userList));
+    res.json(createSuccessResponse(userList, 'Users retrieved successfully'));
   } catch (error) {
     console.error('Get users error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve users'));
@@ -86,7 +86,7 @@ export const getUserById = async (req: AuthenticatedRequest, res: Response) => {
       return res.status(404).json(createErrorResponse('User not found'));
     }
 
-    res.json(createSuccessResponse('User retrieved successfully', user[0]));
+    res.json(createSuccessResponse(user[0], 'User retrieved successfully'));
   } catch (error) {
     console.error('Get user error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve user'));
@@ -161,7 +161,7 @@ export const createUser = async (req: AuthenticatedRequest, res: Response) => {
       createdAt: users.createdAt,
     });
 
-    res.status(201).json(createSuccessResponse('User created successfully', newUser[0]));
+    res.status(201).json(createSuccessResponse(newUser[0], 'User created successfully'));
   } catch (error) {
     console.error('Create user error:', error);
     res.status(500).json(createErrorResponse('Failed to create user'));
@@ -208,7 +208,7 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response) => {
       clearPermissionCache();
     }
 
-    res.json(createSuccessResponse('User updated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'User updated successfully'));
   } catch (error) {
     console.error('Update user error:', error);
     res.status(500).json(createErrorResponse('Failed to update user'));
@@ -244,7 +244,7 @@ export const deactivateUser = async (req: AuthenticatedRequest, res: Response) =
       return res.status(404).json(createErrorResponse('User not found'));
     }
 
-    res.json(createSuccessResponse('User deactivated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'User deactivated successfully'));
   } catch (error) {
     console.error('Deactivate user error:', error);
     res.status(500).json(createErrorResponse('Failed to deactivate user'));
@@ -275,7 +275,7 @@ export const reactivateUser = async (req: AuthenticatedRequest, res: Response) =
       return res.status(404).json(createErrorResponse('User not found'));
     }
 
-    res.json(createSuccessResponse('User reactivated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'User reactivated successfully'));
   } catch (error) {
     console.error('Reactivate user error:', error);
     res.status(500).json(createErrorResponse('Failed to reactivate user'));
@@ -310,7 +310,7 @@ export const resetUserPassword = async (req: AuthenticatedRequest, res: Response
       return res.status(404).json(createErrorResponse('User not found'));
     }
 
-    res.json(createSuccessResponse('Password reset successfully', { userId: updated[0].id }));
+    res.json(createSuccessResponse({ userId: updated[0].id }, 'Password reset successfully'));
   } catch (error) {
     console.error('Reset password error:', error);
     res.status(500).json(createErrorResponse('Failed to reset password'));
@@ -322,17 +322,17 @@ export const getAllPermissions = async (req: AuthenticatedRequest, res: Response
   try {
     const { resource, action } = req.query;
 
-    let query = db.select().from(permissions);
+    let baseQuery = db.select().from(permissions);
 
     if (resource) {
-      query = query.where(eq(permissions.resource, resource as string));
+      baseQuery = baseQuery.where(eq(permissions.resource, resource as string)) as any;
     }
 
     if (action) {
-      query = query.where(eq(permissions.action, action as string));
+      baseQuery = baseQuery.where(eq(permissions.action, action as string)) as any;
     }
 
-    const permissionsList = await query.orderBy(asc(permissions.resource), asc(permissions.action));
+    const permissionsList = await baseQuery.orderBy(asc(permissions.resource), asc(permissions.action));
 
     // Group permissions by resource
     const groupedPermissions = permissionsList.reduce((acc, permission) => {
@@ -343,11 +343,11 @@ export const getAllPermissions = async (req: AuthenticatedRequest, res: Response
       return acc;
     }, {} as Record<string, typeof permissionsList>);
 
-    res.json(createSuccessResponse('Permissions retrieved successfully', {
+    res.json(createSuccessResponse({
       permissions: permissionsList,
       groupedPermissions,
       total: permissionsList.length,
-    }));
+    }, 'Permissions retrieved successfully'));
   } catch (error) {
     console.error('Get permissions error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve permissions'));
@@ -371,7 +371,7 @@ export const getRolePermissions = async (req: AuthenticatedRequest, res: Respons
       .where(eq(rolePermissions.role, role as any))
       .orderBy(asc(permissions.resource), asc(permissions.action));
 
-    res.json(createSuccessResponse('Role permissions retrieved successfully', rolePerms));
+    res.json(createSuccessResponse(rolePerms, 'Role permissions retrieved successfully'));
   } catch (error) {
     console.error('Get role permissions error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve role permissions'));
@@ -403,10 +403,10 @@ export const updateRolePermissions = async (req: AuthenticatedRequest, res: Resp
     // Clear permission cache
     clearPermissionCache();
 
-    res.json(createSuccessResponse('Role permissions updated successfully', {
+    res.json(createSuccessResponse({
       role,
       permissionCount: permissionIds.length,
-    }));
+    }, 'Role permissions updated successfully'));
   } catch (error) {
     console.error('Update role permissions error:', error);
     res.status(500).json(createErrorResponse('Failed to update role permissions'));
@@ -447,7 +447,7 @@ export const getUserStatistics = async (req: AuthenticatedRequest, res: Response
       lastUpdated: new Date(),
     };
 
-    res.json(createSuccessResponse('User statistics retrieved successfully', statistics));
+    res.json(createSuccessResponse(statistics, 'User statistics retrieved successfully'));
   } catch (error) {
     console.error('Get user statistics error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve user statistics'));

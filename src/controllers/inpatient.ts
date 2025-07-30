@@ -41,7 +41,7 @@ export const createInpatientAdmission = async (req: AuthenticatedRequest, res: R
       notes: `Allocated for admission: ${admission[0].id}`,
     });
 
-    res.status(201).json(createSuccessResponse('Inpatient admission created successfully', admission[0]));
+    res.status(201).json(createSuccessResponse(admission[0], 'Inpatient admission created successfully'));
   } catch (error) {
     console.error('Create inpatient admission error:', error);
     res.status(500).json(createErrorResponse('Failed to create inpatient admission'));
@@ -72,7 +72,7 @@ export const getInpatientAdmissions = async (req: AuthenticatedRequest, res: Res
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('Inpatient admissions retrieved successfully', admissions));
+    res.json(createSuccessResponse(admissions, 'Inpatient admissions retrieved successfully'));
   } catch (error) {
     console.error('Get inpatient admissions error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve inpatient admissions'));
@@ -93,7 +93,7 @@ export const getInpatientAdmissionById = async (req: AuthenticatedRequest, res: 
       return res.status(404).json(createErrorResponse('Inpatient admission not found'));
     }
 
-    res.json(createSuccessResponse('Inpatient admission retrieved successfully', admission[0]));
+    res.json(createSuccessResponse(admission[0], 'Inpatient admission retrieved successfully'));
   } catch (error) {
     console.error('Get inpatient admission error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve inpatient admission'));
@@ -118,7 +118,7 @@ export const updateInpatientAdmission = async (req: AuthenticatedRequest, res: R
       return res.status(404).json(createErrorResponse('Inpatient admission not found'));
     }
 
-    res.json(createSuccessResponse('Inpatient admission updated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'Inpatient admission updated successfully'));
   } catch (error) {
     console.error('Update inpatient admission error:', error);
     res.status(500).json(createErrorResponse('Failed to update inpatient admission'));
@@ -164,7 +164,7 @@ export const dischargeInpatient = async (req: AuthenticatedRequest, res: Respons
         )
       );
 
-    res.json(createSuccessResponse('Patient discharged successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'Patient discharged successfully'));
   } catch (error) {
     console.error('Discharge inpatient error:', error);
     res.status(500).json(createErrorResponse('Failed to discharge patient'));
@@ -192,7 +192,7 @@ export const getBedAllocations = async (req: AuthenticatedRequest, res: Response
 
     const allocations = await query.orderBy(asc(bedAllocations.roomNumber), asc(bedAllocations.bedNumber));
 
-    res.json(createSuccessResponse('Bed allocations retrieved successfully', allocations));
+    res.json(createSuccessResponse(allocations, 'Bed allocations retrieved successfully'));
   } catch (error) {
     console.error('Get bed allocations error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve bed allocations'));
@@ -207,7 +207,7 @@ export const getAvailableBeds = async (req: AuthenticatedRequest, res: Response)
       .where(eq(bedAllocations.status, 'available'))
       .orderBy(asc(bedAllocations.roomNumber), asc(bedAllocations.bedNumber));
 
-    res.json(createSuccessResponse('Available beds retrieved successfully', availableBeds));
+    res.json(createSuccessResponse(availableBeds, 'Available beds retrieved successfully'));
   } catch (error) {
     console.error('Get available beds error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve available beds'));
@@ -241,7 +241,7 @@ export const recordVitalSigns = async (req: AuthenticatedRequest, res: Response)
       recordedAt: new Date(),
     }).returning();
 
-    res.status(201).json(createSuccessResponse('Vital signs recorded successfully', vitalSign[0]));
+    res.status(201).json(createSuccessResponse(vitalSign[0], 'Vital signs recorded successfully'));
   } catch (error) {
     console.error('Record vital signs error:', error);
     res.status(500).json(createErrorResponse('Failed to record vital signs'));
@@ -264,7 +264,7 @@ export const getVitalSigns = async (req: AuthenticatedRequest, res: Response) =>
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('Vital signs retrieved successfully', vitals));
+    res.json(createSuccessResponse(vitals, 'Vital signs retrieved successfully'));
   } catch (error) {
     console.error('Get vital signs error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve vital signs'));
@@ -300,7 +300,7 @@ export const recordMedication = async (req: AuthenticatedRequest, res: Response)
       notes,
     }).returning();
 
-    res.status(201).json(createSuccessResponse('Medication recorded successfully', medication[0]));
+    res.status(201).json(createSuccessResponse(medication[0], 'Medication recorded successfully'));
   } catch (error) {
     console.error('Record medication error:', error);
     res.status(500).json(createErrorResponse('Failed to record medication'));
@@ -327,7 +327,7 @@ export const getMedicationRecords = async (req: AuthenticatedRequest, res: Respo
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('Medication records retrieved successfully', medications));
+    res.json(createSuccessResponse(medications, 'Medication records retrieved successfully'));
   } catch (error) {
     console.error('Get medication records error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve medication records'));
@@ -353,7 +353,7 @@ export const updateMedicationStatus = async (req: AuthenticatedRequest, res: Res
       return res.status(404).json(createErrorResponse('Medication record not found'));
     }
 
-    res.json(createSuccessResponse('Medication status updated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'Medication status updated successfully'));
   } catch (error) {
     console.error('Update medication status error:', error);
     res.status(500).json(createErrorResponse('Failed to update medication status'));

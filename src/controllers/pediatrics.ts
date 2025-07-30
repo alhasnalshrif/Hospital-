@@ -32,7 +32,7 @@ export const createPediatricRecord = async (req: AuthenticatedRequest, res: Resp
       createdById: req.user!.id,
     }).returning();
 
-    res.status(201).json(createSuccessResponse('Pediatric record created successfully', record[0]));
+    res.status(201).json(createSuccessResponse(record[0], 'Pediatric record created successfully'));
   } catch (error) {
     console.error('Create pediatric record error:', error);
     res.status(500).json(createErrorResponse('Failed to create pediatric record'));
@@ -55,7 +55,7 @@ export const getPediatricRecords = async (req: AuthenticatedRequest, res: Respon
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('Pediatric records retrieved successfully', records));
+    res.json(createSuccessResponse(records, 'Pediatric records retrieved successfully'));
   } catch (error) {
     console.error('Get pediatric records error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve pediatric records'));
@@ -76,7 +76,7 @@ export const getPediatricRecordById = async (req: AuthenticatedRequest, res: Res
       return res.status(404).json(createErrorResponse('Pediatric record not found'));
     }
 
-    res.json(createSuccessResponse('Pediatric record retrieved successfully', record[0]));
+    res.json(createSuccessResponse(record[0], 'Pediatric record retrieved successfully'));
   } catch (error) {
     console.error('Get pediatric record error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve pediatric record'));
@@ -101,7 +101,7 @@ export const updatePediatricRecord = async (req: AuthenticatedRequest, res: Resp
       return res.status(404).json(createErrorResponse('Pediatric record not found'));
     }
 
-    res.json(createSuccessResponse('Pediatric record updated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'Pediatric record updated successfully'));
   } catch (error) {
     console.error('Update pediatric record error:', error);
     res.status(500).json(createErrorResponse('Failed to update pediatric record'));
@@ -139,7 +139,7 @@ export const recordVaccination = async (req: AuthenticatedRequest, res: Response
       notes,
     }).returning();
 
-    res.status(201).json(createSuccessResponse('Vaccination recorded successfully', vaccination[0]));
+    res.status(201).json(createSuccessResponse(vaccination[0], 'Vaccination recorded successfully'));
   } catch (error) {
     console.error('Record vaccination error:', error);
     res.status(500).json(createErrorResponse('Failed to record vaccination'));
@@ -166,7 +166,7 @@ export const getVaccinations = async (req: AuthenticatedRequest, res: Response) 
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('Vaccinations retrieved successfully', vaccinationRecords));
+    res.json(createSuccessResponse(vaccinationRecords, 'Vaccinations retrieved successfully'));
   } catch (error) {
     console.error('Get vaccinations error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve vaccinations'));
@@ -187,7 +187,7 @@ export const getVaccinationById = async (req: AuthenticatedRequest, res: Respons
       return res.status(404).json(createErrorResponse('Vaccination record not found'));
     }
 
-    res.json(createSuccessResponse('Vaccination retrieved successfully', vaccination[0]));
+    res.json(createSuccessResponse(vaccination[0], 'Vaccination retrieved successfully'));
   } catch (error) {
     console.error('Get vaccination error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve vaccination'));
@@ -220,7 +220,7 @@ export const getUpcomingVaccinations = async (req: AuthenticatedRequest, res: Re
       new Date(v.nextDueDate) <= futureDate
     );
 
-    res.json(createSuccessResponse('Upcoming vaccinations retrieved successfully', upcoming));
+    res.json(createSuccessResponse(upcoming, 'Upcoming vaccinations retrieved successfully'));
   } catch (error) {
     console.error('Get upcoming vaccinations error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve upcoming vaccinations'));
@@ -258,7 +258,7 @@ export const recordGrowthMeasurement = async (req: AuthenticatedRequest, res: Re
       recordedById: req.user!.id,
     }).returning();
 
-    res.status(201).json(createSuccessResponse('Growth measurement recorded successfully', measurement[0]));
+    res.status(201).json(createSuccessResponse(measurement[0], 'Growth measurement recorded successfully'));
   } catch (error) {
     console.error('Record growth measurement error:', error);
     res.status(500).json(createErrorResponse('Failed to record growth measurement'));
@@ -281,7 +281,7 @@ export const getGrowthCharts = async (req: AuthenticatedRequest, res: Response) 
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('Growth charts retrieved successfully', charts));
+    res.json(createSuccessResponse(charts, 'Growth charts retrieved successfully'));
   } catch (error) {
     console.error('Get growth charts error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve growth charts'));
@@ -303,7 +303,7 @@ export const getLatestGrowthMeasurement = async (req: AuthenticatedRequest, res:
       return res.status(404).json(createErrorResponse('No growth measurements found'));
     }
 
-    res.json(createSuccessResponse('Latest growth measurement retrieved successfully', latest[0]));
+    res.json(createSuccessResponse(latest[0], 'Latest growth measurement retrieved successfully'));
   } catch (error) {
     console.error('Get latest growth measurement error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve latest growth measurement'));
@@ -335,7 +335,7 @@ export const recordDevelopmentalMilestone = async (req: AuthenticatedRequest, re
       recordedById: req.user!.id,
     }).returning();
 
-    res.status(201).json(createSuccessResponse('Developmental milestone recorded successfully', milestone[0]));
+    res.status(201).json(createSuccessResponse(milestone[0], 'Developmental milestone recorded successfully'));
   } catch (error) {
     console.error('Record developmental milestone error:', error);
     res.status(500).json(createErrorResponse('Failed to record developmental milestone'));
@@ -366,7 +366,7 @@ export const getDevelopmentalMilestones = async (req: AuthenticatedRequest, res:
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('Developmental milestones retrieved successfully', milestones));
+    res.json(createSuccessResponse(milestones, 'Developmental milestones retrieved successfully'));
   } catch (error) {
     console.error('Get developmental milestones error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve developmental milestones'));
@@ -394,7 +394,7 @@ export const updateDevelopmentalMilestone = async (req: AuthenticatedRequest, re
       return res.status(404).json(createErrorResponse('Developmental milestone not found'));
     }
 
-    res.json(createSuccessResponse('Developmental milestone updated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'Developmental milestone updated successfully'));
   } catch (error) {
     console.error('Update developmental milestone error:', error);
     res.status(500).json(createErrorResponse('Failed to update developmental milestone'));
@@ -430,7 +430,7 @@ export const getPediatricStatistics = async (req: AuthenticatedRequest, res: Res
       lastUpdated: new Date(),
     };
 
-    res.json(createSuccessResponse('Pediatric statistics retrieved successfully', statistics));
+    res.json(createSuccessResponse(statistics, 'Pediatric statistics retrieved successfully'));
   } catch (error) {
     console.error('Get pediatric statistics error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve pediatric statistics'));

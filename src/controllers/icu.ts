@@ -33,7 +33,7 @@ export const createIcuAdmission = async (req: AuthenticatedRequest, res: Respons
       notes,
     }).returning();
 
-    res.status(201).json(createSuccessResponse('ICU admission created successfully', admission[0]));
+    res.status(201).json(createSuccessResponse(admission[0], 'ICU admission created successfully'));
   } catch (error) {
     console.error('Create ICU admission error:', error);
     res.status(500).json(createErrorResponse('Failed to create ICU admission'));
@@ -68,7 +68,7 @@ export const getIcuAdmissions = async (req: AuthenticatedRequest, res: Response)
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('ICU admissions retrieved successfully', admissions));
+    res.json(createSuccessResponse(admissions, 'ICU admissions retrieved successfully'));
   } catch (error) {
     console.error('Get ICU admissions error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve ICU admissions'));
@@ -89,7 +89,7 @@ export const getIcuAdmissionById = async (req: AuthenticatedRequest, res: Respon
       return res.status(404).json(createErrorResponse('ICU admission not found'));
     }
 
-    res.json(createSuccessResponse('ICU admission retrieved successfully', admission[0]));
+    res.json(createSuccessResponse(admission[0], 'ICU admission retrieved successfully'));
   } catch (error) {
     console.error('Get ICU admission error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve ICU admission'));
@@ -114,7 +114,7 @@ export const updateIcuAdmission = async (req: AuthenticatedRequest, res: Respons
       return res.status(404).json(createErrorResponse('ICU admission not found'));
     }
 
-    res.json(createSuccessResponse('ICU admission updated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'ICU admission updated successfully'));
   } catch (error) {
     console.error('Update ICU admission error:', error);
     res.status(500).json(createErrorResponse('Failed to update ICU admission'));
@@ -143,7 +143,7 @@ export const dischargeFromIcu = async (req: AuthenticatedRequest, res: Response)
       return res.status(404).json(createErrorResponse('ICU admission not found'));
     }
 
-    res.json(createSuccessResponse('Patient discharged from ICU successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'Patient discharged from ICU successfully'));
   } catch (error) {
     console.error('Discharge from ICU error:', error);
     res.status(500).json(createErrorResponse('Failed to discharge patient from ICU'));
@@ -187,7 +187,7 @@ export const recordIcuMonitoring = async (req: AuthenticatedRequest, res: Respon
       recordedAt: new Date(),
     }).returning();
 
-    res.status(201).json(createSuccessResponse('ICU monitoring recorded successfully', monitoring[0]));
+    res.status(201).json(createSuccessResponse(monitoring[0], 'ICU monitoring recorded successfully'));
   } catch (error) {
     console.error('Record ICU monitoring error:', error);
     res.status(500).json(createErrorResponse('Failed to record ICU monitoring'));
@@ -210,7 +210,7 @@ export const getIcuMonitoring = async (req: AuthenticatedRequest, res: Response)
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('ICU monitoring retrieved successfully', monitoring));
+    res.json(createSuccessResponse(monitoring, 'ICU monitoring retrieved successfully'));
   } catch (error) {
     console.error('Get ICU monitoring error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve ICU monitoring'));
@@ -245,7 +245,7 @@ export const recordIcuProcedure = async (req: AuthenticatedRequest, res: Respons
       procedureDate: new Date(),
     }).returning();
 
-    res.status(201).json(createSuccessResponse('ICU procedure recorded successfully', procedure[0]));
+    res.status(201).json(createSuccessResponse(procedure[0], 'ICU procedure recorded successfully'));
   } catch (error) {
     console.error('Record ICU procedure error:', error);
     res.status(500).json(createErrorResponse('Failed to record ICU procedure'));
@@ -272,7 +272,7 @@ export const getIcuProcedures = async (req: AuthenticatedRequest, res: Response)
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('ICU procedures retrieved successfully', procedures));
+    res.json(createSuccessResponse(procedures, 'ICU procedures retrieved successfully'));
   } catch (error) {
     console.error('Get ICU procedures error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve ICU procedures'));
@@ -314,7 +314,7 @@ export const createIcuDailyReport = async (req: AuthenticatedRequest, res: Respo
       createdById: req.user!.id,
     }).returning();
 
-    res.status(201).json(createSuccessResponse('ICU daily report created successfully', report[0]));
+    res.status(201).json(createSuccessResponse(report[0], 'ICU daily report created successfully'));
   } catch (error) {
     console.error('Create ICU daily report error:', error);
     res.status(500).json(createErrorResponse('Failed to create ICU daily report'));
@@ -341,7 +341,7 @@ export const getIcuDailyReports = async (req: AuthenticatedRequest, res: Respons
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('ICU daily reports retrieved successfully', reports));
+    res.json(createSuccessResponse(reports, 'ICU daily reports retrieved successfully'));
   } catch (error) {
     console.error('Get ICU daily reports error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve ICU daily reports'));
@@ -366,7 +366,7 @@ export const updateIcuDailyReport = async (req: AuthenticatedRequest, res: Respo
       return res.status(404).json(createErrorResponse('ICU daily report not found'));
     }
 
-    res.json(createSuccessResponse('ICU daily report updated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'ICU daily report updated successfully'));
   } catch (error) {
     console.error('Update ICU daily report error:', error);
     res.status(500).json(createErrorResponse('Failed to update ICU daily report'));
@@ -403,7 +403,7 @@ export const getIcuStatistics = async (req: AuthenticatedRequest, res: Response)
       lastUpdated: new Date(),
     };
 
-    res.json(createSuccessResponse('ICU statistics retrieved successfully', statistics));
+    res.json(createSuccessResponse(statistics, 'ICU statistics retrieved successfully'));
   } catch (error) {
     console.error('Get ICU statistics error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve ICU statistics'));

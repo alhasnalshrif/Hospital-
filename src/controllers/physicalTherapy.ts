@@ -47,7 +47,7 @@ export const createPtAssessment = async (req: AuthenticatedRequest, res: Respons
       assessmentDate: new Date(),
     }).returning();
 
-    res.status(201).json(createSuccessResponse('PT assessment created successfully', assessment[0]));
+    res.status(201).json(createSuccessResponse(assessment[0], 'PT assessment created successfully'));
   } catch (error) {
     console.error('Create PT assessment error:', error);
     res.status(500).json(createErrorResponse('Failed to create PT assessment'));
@@ -74,7 +74,7 @@ export const getPtAssessments = async (req: AuthenticatedRequest, res: Response)
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('PT assessments retrieved successfully', assessments));
+    res.json(createSuccessResponse(assessments, 'PT assessments retrieved successfully'));
   } catch (error) {
     console.error('Get PT assessments error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve PT assessments'));
@@ -95,7 +95,7 @@ export const getPtAssessmentById = async (req: AuthenticatedRequest, res: Respon
       return res.status(404).json(createErrorResponse('PT assessment not found'));
     }
 
-    res.json(createSuccessResponse('PT assessment retrieved successfully', assessment[0]));
+    res.json(createSuccessResponse(assessment[0], 'PT assessment retrieved successfully'));
   } catch (error) {
     console.error('Get PT assessment error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve PT assessment'));
@@ -120,7 +120,7 @@ export const updatePtAssessment = async (req: AuthenticatedRequest, res: Respons
       return res.status(404).json(createErrorResponse('PT assessment not found'));
     }
 
-    res.json(createSuccessResponse('PT assessment updated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'PT assessment updated successfully'));
   } catch (error) {
     console.error('Update PT assessment error:', error);
     res.status(500).json(createErrorResponse('Failed to update PT assessment'));
@@ -164,7 +164,7 @@ export const createTherapySession = async (req: AuthenticatedRequest, res: Respo
       notes,
     }).returning();
 
-    res.status(201).json(createSuccessResponse('Therapy session created successfully', session[0]));
+    res.status(201).json(createSuccessResponse(session[0], 'Therapy session created successfully'));
   } catch (error) {
     console.error('Create therapy session error:', error);
     res.status(500).json(createErrorResponse('Failed to create therapy session'));
@@ -199,7 +199,7 @@ export const getTherapySessions = async (req: AuthenticatedRequest, res: Respons
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('Therapy sessions retrieved successfully', sessions));
+    res.json(createSuccessResponse(sessions, 'Therapy sessions retrieved successfully'));
   } catch (error) {
     console.error('Get therapy sessions error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve therapy sessions'));
@@ -220,7 +220,7 @@ export const getTherapySessionById = async (req: AuthenticatedRequest, res: Resp
       return res.status(404).json(createErrorResponse('Therapy session not found'));
     }
 
-    res.json(createSuccessResponse('Therapy session retrieved successfully', session[0]));
+    res.json(createSuccessResponse(session[0], 'Therapy session retrieved successfully'));
   } catch (error) {
     console.error('Get therapy session error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve therapy session'));
@@ -245,7 +245,7 @@ export const updateTherapySession = async (req: AuthenticatedRequest, res: Respo
       return res.status(404).json(createErrorResponse('Therapy session not found'));
     }
 
-    res.json(createSuccessResponse('Therapy session updated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'Therapy session updated successfully'));
   } catch (error) {
     console.error('Update therapy session error:', error);
     res.status(500).json(createErrorResponse('Failed to update therapy session'));
@@ -273,7 +273,7 @@ export const getTherapyEquipment = async (req: AuthenticatedRequest, res: Respon
 
     const equipment = await query.orderBy(asc(therapyEquipment.equipmentName));
 
-    res.json(createSuccessResponse('Therapy equipment retrieved successfully', equipment));
+    res.json(createSuccessResponse(equipment, 'Therapy equipment retrieved successfully'));
   } catch (error) {
     console.error('Get therapy equipment error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve therapy equipment'));
@@ -301,7 +301,7 @@ export const updateEquipmentStatus = async (req: AuthenticatedRequest, res: Resp
       return res.status(404).json(createErrorResponse('Equipment not found'));
     }
 
-    res.json(createSuccessResponse('Equipment status updated successfully', updated[0]));
+    res.json(createSuccessResponse(updated[0], 'Equipment status updated successfully'));
   } catch (error) {
     console.error('Update equipment status error:', error);
     res.status(500).json(createErrorResponse('Failed to update equipment status'));
@@ -334,7 +334,7 @@ export const getEquipmentMaintenanceSchedule = async (req: AuthenticatedRequest,
       lastUpdated: new Date(),
     };
 
-    res.json(createSuccessResponse('Equipment maintenance schedule retrieved successfully', maintenanceSchedule));
+    res.json(createSuccessResponse(maintenanceSchedule, 'Equipment maintenance schedule retrieved successfully'));
   } catch (error) {
     console.error('Get equipment maintenance schedule error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve equipment maintenance schedule'));
@@ -382,7 +382,7 @@ export const createOutcomeEvaluation = async (req: AuthenticatedRequest, res: Re
       evaluationDate: new Date(),
     }).returning();
 
-    res.status(201).json(createSuccessResponse('Outcome evaluation created successfully', evaluation[0]));
+    res.status(201).json(createSuccessResponse(evaluation[0], 'Outcome evaluation created successfully'));
   } catch (error) {
     console.error('Create outcome evaluation error:', error);
     res.status(500).json(createErrorResponse('Failed to create outcome evaluation'));
@@ -413,7 +413,7 @@ export const getOutcomeEvaluations = async (req: AuthenticatedRequest, res: Resp
       .limit(Number(limit))
       .offset(offset);
 
-    res.json(createSuccessResponse('Outcome evaluations retrieved successfully', evaluations));
+    res.json(createSuccessResponse(evaluations, 'Outcome evaluations retrieved successfully'));
   } catch (error) {
     console.error('Get outcome evaluations error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve outcome evaluations'));
@@ -434,7 +434,7 @@ export const getOutcomeEvaluationById = async (req: AuthenticatedRequest, res: R
       return res.status(404).json(createErrorResponse('Outcome evaluation not found'));
     }
 
-    res.json(createSuccessResponse('Outcome evaluation retrieved successfully', evaluation[0]));
+    res.json(createSuccessResponse(evaluation[0], 'Outcome evaluation retrieved successfully'));
   } catch (error) {
     console.error('Get outcome evaluation error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve outcome evaluation'));
@@ -486,7 +486,7 @@ export const getPtStatistics = async (req: AuthenticatedRequest, res: Response) 
       lastUpdated: new Date(),
     };
 
-    res.json(createSuccessResponse('PT statistics retrieved successfully', statistics));
+    res.json(createSuccessResponse(statistics, 'PT statistics retrieved successfully'));
   } catch (error) {
     console.error('Get PT statistics error:', error);
     res.status(500).json(createErrorResponse('Failed to retrieve PT statistics'));

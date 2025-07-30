@@ -4,7 +4,7 @@ import { db, permissions, rolePermissions } from '../db';
 import { eq, and } from 'drizzle-orm';
 
 // Permission cache to avoid database queries
-const permissionCache = new Map<string, boolean>();
+const permissionCache = new Map<string, CacheEntry>();
 const CACHE_EXPIRY = 5 * 60 * 1000; // 5 minutes
 
 interface CacheEntry {
@@ -25,7 +25,7 @@ export const requirePermission = (resource: string, action: string) => {
       }
 
       const cacheKey = `${req.user.role}:${resource}:${action}`;
-      const cached = permissionCache.get(cacheKey) as CacheEntry;
+      const cached = permissionCache.get(cacheKey);
       
       // Check cache first
       if (cached && (Date.now() - cached.timestamp) < CACHE_EXPIRY) {
