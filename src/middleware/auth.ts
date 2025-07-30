@@ -122,3 +122,6 @@ export const optionalAuth = async (
     next();
   }
 };
+
+// Alias for convenience
+export const requireAuth = authenticateToken;

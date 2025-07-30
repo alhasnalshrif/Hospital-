@@ -1,4 +1,4 @@
-import { db, users, serviceCharges, permissions, rolePermissions } from '../db';
+import { db, users, serviceCharges, permissions, rolePermissions, inventoryCategories, inventoryItems, insuranceCompanies, departments, positions } from '../db';
 import bcrypt from 'bcryptjs';
 
 export const seedDatabase = async () => {
@@ -268,6 +268,9 @@ export const seedDatabase = async () => {
       }
     }
 
+    // Seed data for new internal systems
+    await seedInternalSystems();
+
     console.log('✅ Database seeding completed successfully!');
     console.log('📋 Default users created:');
     console.log('   - Admin: admin@hospital.com / admin123');
@@ -279,6 +282,111 @@ export const seedDatabase = async () => {
     console.error('❌ Database seeding failed:', error);
     throw error;
   }
+};
+
+const seedInternalSystems = async () => {
+  console.log('🏥 Seeding internal systems data...');
+
+  // Seed inventory categories
+  const categories = [
+    { name: 'Medical Supplies', description: 'General medical supplies and consumables' },
+    { name: 'Pharmaceuticals', description: 'Medications and drugs' },
+    { name: 'Surgical Instruments', description: 'Surgical tools and equipment' },
+    { name: 'Dental Supplies', description: 'Dental materials and tools' },
+    { name: 'ICU Equipment', description: 'Intensive care unit equipment' },
+    { name: 'Physical Therapy', description: 'Physical therapy equipment and supplies' },
+  ];
+
+  for (const category of categories) {
+    await db.insert(inventoryCategories).values(category).onConflictDoNothing();
+  }
+
+  // Seed sample inventory items
+  const items = [
+    { name: 'Disposable Syringes', unit: 'boxes', unitCost: '25.00', reorderLevel: 10, supplier: 'Medical Supply Co.' },
+    { name: 'Surgical Gloves', unit: 'boxes', unitCost: '15.00', reorderLevel: 20, supplier: 'Healthcare Supplies Inc.' },
+    { name: 'Dental Amalgam', unit: 'vials', unitCost: '45.00', reorderLevel: 5, supplier: 'Dental Materials Ltd.' },
+    { name: 'Ventilator Filters', unit: 'pieces', unitCost: '120.00', reorderLevel: 8, supplier: 'ICU Equipment Co.' },
+    { name: 'Resistance Bands', unit: 'sets', unitCost: '30.00', reorderLevel: 12, supplier: 'PT Equipment Inc.' },
+  ];
+
+  for (const item of items) {
+    await db.insert(inventoryItems).values({
+      itemCode: `ITM_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
+      ...item,
+    }).onConflictDoNothing();
+  }
+
+  // Seed insurance companies
+  const companies = [
+    {
+      name: 'BlueCross BlueShield',
+      code: 'BCBS',
+      address: '123 Insurance Ave, Healthcare City, HC 12345',
+      contactPhone: '+1-800-123-4567',
+      contactEmail: 'provider@bcbs.com',
+      contractedServices: ['medical', 'dental', 'emergency', 'inpatient'],
+      paymentTerms: 'Net 30 days',
+    },
+    {
+      name: 'Aetna Healthcare',
+      code: 'AETNA',
+      address: '456 Health Blvd, Medical Town, MT 67890',
+      contactPhone: '+1-800-234-5678',
+      contactEmail: 'providers@aetna.com',
+      contractedServices: ['medical', 'emergency', 'pharmacy'],
+      paymentTerms: 'Net 45 days',
+    },
+    {
+      name: 'United Healthcare',
+      code: 'UHC',
+      address: '789 Wellness St, Care City, CC 11111',
+      contactPhone: '+1-800-345-6789',
+      contactEmail: 'network@uhc.com',
+      contractedServices: ['medical', 'dental', 'inpatient', 'physical_therapy'],
+      paymentTerms: 'Net 30 days',
+    },
+  ];
+
+  for (const company of companies) {
+    await db.insert(insuranceCompanies).values(company).onConflictDoNothing();
+  }
+
+  // Seed HR departments
+  const depts = [
+    { name: 'Administration', code: 'ADMIN', description: 'Hospital administration and management', location: 'Building A - Floor 1' },
+    { name: 'Medical Services', code: 'MED', description: 'General medical services', location: 'Building B - Floor 2' },
+    { name: 'Dental Services', code: 'DENT', description: 'Dental care department', location: 'Building C - Floor 1' },
+    { name: 'Intensive Care Unit', code: 'ICU', description: 'Critical care services', location: 'Building B - Floor 3' },
+    { name: 'Pediatrics', code: 'PED', description: 'Pediatric care services', location: 'Building D - Floor 1' },
+    { name: 'Physical Therapy', code: 'PT', description: 'Rehabilitation services', location: 'Building E - Floor 1' },
+    { name: 'Radiology', code: 'RAD', description: 'Medical imaging services', location: 'Building B - Floor 1' },
+    { name: 'Laboratory', code: 'LAB', description: 'Diagnostic laboratory', location: 'Building B - Basement' },
+  ];
+
+  for (const dept of depts) {
+    await db.insert(departments).values(dept).onConflictDoNothing();
+  }
+
+  // Seed positions
+  const positionsData = [
+    { title: 'Hospital Administrator', code: 'ADMIN001', jobDescription: 'Overall hospital management and operations' },
+    { title: 'Chief Medical Officer', code: 'CMO001', jobDescription: 'Medical department leadership and oversight' },
+    { title: 'Staff Physician', code: 'DOC001', jobDescription: 'Patient care and medical services' },
+    { title: 'Head Nurse', code: 'NURSE001', jobDescription: 'Nursing department supervision' },
+    { title: 'Registered Nurse', code: 'NURSE002', jobDescription: 'Patient care and medical assistance' },
+    { title: 'Physical Therapist', code: 'PT001', jobDescription: 'Rehabilitation and therapy services' },
+    { title: 'Radiologic Technologist', code: 'RAD001', jobDescription: 'Medical imaging and diagnostic procedures' },
+    { title: 'Laboratory Technician', code: 'LAB001', jobDescription: 'Laboratory testing and analysis' },
+  ];
+
+  for (const position of positionsData) {
+    await db.insert(positions).values(position).onConflictDoNothing();
+  }
+
+  console.log('   ✓ Inventory categories and items seeded');
+  console.log('   ✓ Insurance companies seeded');
+  console.log('   ✓ HR departments and positions seeded');
 };
 
 // Run seeding if this file is executed directly

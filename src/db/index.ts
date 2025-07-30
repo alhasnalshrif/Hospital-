@@ -11,6 +11,10 @@ export * from './schema/physicalTherapy';
 export * from './schema/billing';
 export * from './schema/auth';
 export * from './schema/communication';
+export * from './schema/imaging';
+export * from './schema/inventory';
+export * from './schema/insurance';
+export * from './schema/hr';
 
 // Database configuration
 let dbInstance: ReturnType<typeof drizzle>;

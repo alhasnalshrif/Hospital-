@@ -4,6 +4,10 @@ import patientRoutes from './patients';
 import billingRoutes from './billing';
 import demoRoutes from './demo';
 import usersRoutes from './users';
+import imagingRoutes from './imaging';
+import inventoryRoutes from './inventory';
+import insuranceRoutes from './insurance';
+import hrRoutes from './hr';
 // Temporarily comment out new routes until schema alignment is fixed
 // import dentalRoutes from './dental';
 // import inpatientRoutes from './inpatient';
@@ -22,6 +26,10 @@ router.use(`${API_VERSION}/patients`, patientRoutes);
 router.use(`${API_VERSION}/billing`, billingRoutes);
 router.use(`${API_VERSION}/demo`, demoRoutes);
 router.use(`${API_VERSION}/users`, usersRoutes);
+router.use(`${API_VERSION}/imaging`, imagingRoutes);
+router.use(`${API_VERSION}/inventory`, inventoryRoutes);
+router.use(`${API_VERSION}/insurance`, insuranceRoutes);
+router.use(`${API_VERSION}/hr`, hrRoutes);
 // Temporarily disabled until schema alignment is fixed
 // router.use(`${API_VERSION}/dental`, dentalRoutes);
 // router.use(`${API_VERSION}/inpatient`, inpatientRoutes);
@@ -131,11 +139,64 @@ router.get('/api/docs', (req, res) => {
         'GET /api/v1/demo/service-charges': 'Demo service charges (works without database)',
       },
     },
+    internalSystems: {
+      imaging: {
+        'POST /api/v1/imaging/images/upload': 'Upload medical image to internal PACS',
+        'GET /api/v1/imaging/images/:dicomId': 'Get medical image by DICOM ID',
+        'GET /api/v1/imaging/patients/:patientId/images': 'Get all images for patient',
+        'PUT /api/v1/imaging/images/:dicomId/report': 'Update image report',
+        'POST /api/v1/imaging/studies': 'Create imaging study',
+        'GET /api/v1/imaging/patients/:patientId/studies': 'Get imaging studies for patient',
+        'PUT /api/v1/imaging/studies/:studyId/status': 'Update study status',
+        'GET /api/v1/imaging/reports/pending': 'Get pending reports',
+      },
+      inventory: {
+        'POST /api/v1/inventory/items': 'Create inventory item',
+        'GET /api/v1/inventory/items': 'Get inventory items',
+        'PUT /api/v1/inventory/items/:itemId/stock': 'Update stock levels',
+        'GET /api/v1/inventory/items/:itemId/movements': 'Get stock movements',
+        'POST /api/v1/inventory/purchase-orders': 'Create purchase order',
+        'GET /api/v1/inventory/purchase-orders': 'Get purchase orders',
+        'PUT /api/v1/inventory/purchase-orders/:poId/status': 'Update PO status',
+        'POST /api/v1/inventory/categories': 'Create inventory category',
+        'GET /api/v1/inventory/categories': 'Get inventory categories',
+        'GET /api/v1/inventory/alerts/low-stock': 'Get low stock alerts',
+      },
+      insurance: {
+        'POST /api/v1/insurance/eligibility/verify': 'Verify insurance eligibility',
+        'POST /api/v1/insurance/claims': 'Submit insurance claim',
+        'GET /api/v1/insurance/claims/:claimId/status': 'Get claim status',
+        'PUT /api/v1/insurance/claims/:claimId/status': 'Update claim status',
+        'POST /api/v1/insurance/preauthorizations': 'Create pre-authorization',
+        'PUT /api/v1/insurance/preauthorizations/:authId/status': 'Update pre-auth status',
+        'POST /api/v1/insurance/patients/:patientId/insurance': 'Add patient insurance',
+        'GET /api/v1/insurance/patients/:patientId/insurance': 'Get patient insurance',
+        'POST /api/v1/insurance/companies': 'Create insurance company',
+        'GET /api/v1/insurance/companies': 'Get insurance companies',
+      },
+      hr: {
+        'POST /api/v1/hr/employees': 'Create employee record',
+        'GET /api/v1/hr/employees': 'Get employees list',
+        'GET /api/v1/hr/employees/:employeeId': 'Get employee details',
+        'PUT /api/v1/hr/employees/:employeeId': 'Update employee',
+        'POST /api/v1/hr/attendance': 'Record attendance',
+        'GET /api/v1/hr/employees/:employeeId/attendance': 'Get employee attendance',
+        'POST /api/v1/hr/leave-requests': 'Submit leave request',
+        'GET /api/v1/hr/leave-requests': 'Get leave requests',
+        'PUT /api/v1/hr/leave-requests/:requestId/status': 'Update leave request status',
+        'POST /api/v1/hr/departments': 'Create department',
+        'GET /api/v1/hr/departments': 'Get departments',
+        'POST /api/v1/hr/positions': 'Create position',
+        'GET /api/v1/hr/positions': 'Get positions',
+        'GET /api/v1/hr/employees/:employeeId/payroll': 'Get employee payroll',
+      },
+    },
     externalIntegrations: {
-      PACS: 'Picture Archiving and Communication System (implemented as service stubs)',
-      'HL7/FHIR': 'Health Level 7 / Fast Healthcare Interoperability Resources (implemented as service stubs)',
-      ERP: 'Enterprise Resource Planning (implemented as service stubs)',
-      Insurance: 'Insurance claim processing (implemented as service stubs)',
+      note: 'All external systems are now internal - no external APIs required',
+      PACS: 'Picture Archiving and Communication System (internal implementation)',
+      'HL7/FHIR': 'Health Level 7 / Fast Healthcare Interoperability Resources (internal implementation)',
+      ERP: 'Enterprise Resource Planning - HR and Inventory (internal implementation)',
+      Insurance: 'Insurance eligibility verification and claim processing (internal implementation)',
     },
     databaseSetup: {
       note: 'To enable full functionality, set up PostgreSQL and configure the .env file',
