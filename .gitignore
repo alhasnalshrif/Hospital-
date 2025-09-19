@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+frontend/node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -14,6 +15,8 @@ yarn-error.log*
 # Build output
 dist/
 build/
+frontend/dist/
+frontend/build/
 
 # Database
 *.db
@@ -54,3 +57,7 @@ temp/
 
 # Drizzle
 drizzle/
+
+# Frontend specific
+frontend/.vite/
+frontend/.turbo/
