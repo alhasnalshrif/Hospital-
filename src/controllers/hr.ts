@@ -69,25 +69,32 @@ export const getEmployees = async (req: Request, res: Response) => {
   try {
     const { departmentId, status } = req.query;
 
-    let query = db
-      .select({
-        employee: employees,
-        department: departments,
-        position: positions,
-      })
-      .from(employees)
-      .leftJoin(departments, eq(employees.departmentId, departments.id))
-      .leftJoin(positions, eq(employees.positionId, positions.id));
-
+    let whereConditions = [];
+    
     if (departmentId) {
-      query = query.where(eq(employees.departmentId, departmentId as string));
+      whereConditions.push(eq(employees.departmentId, departmentId as string));
     }
 
     if (status) {
-      query = query.where(eq(employees.employmentStatus, status as string));
+      whereConditions.push(eq(employees.employmentStatus, status as string));
     }
 
-    const employeeList = await query;
+    const employeeList = await (() => {
+      let query = db
+        .select({
+          employee: employees,
+          department: departments,
+          position: positions,
+        })
+        .from(employees)
+        .leftJoin(departments, eq(employees.departmentId, departments.id))
+        .leftJoin(positions, eq(employees.positionId, positions.id));
+
+      if (whereConditions.length > 0) {
+        return query.where(whereConditions.length === 1 ? whereConditions[0] : and(...whereConditions));
+      }
+      return query;
+    })();
 
     res.json({
       success: true,

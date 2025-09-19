@@ -142,21 +142,28 @@ export const getDentalAppointments = async (req: AuthenticatedRequest, res: Resp
     const { patientId, doctorId, date, status, page = 1, limit = 10 } = req.query;
     const offset = (Number(page) - 1) * Number(limit);
 
-    let query = db.select().from(dentalAppointments);
+    let whereConditions = [];
 
     if (patientId) {
-      query = query.where(eq(dentalAppointments.patientId, patientId as string));
+      whereConditions.push(eq(dentalAppointments.patientId, patientId as string));
     }
 
     if (doctorId) {
-      query = query.where(eq(dentalAppointments.doctorId, doctorId as string));
+      whereConditions.push(eq(dentalAppointments.doctorId, doctorId as string));
     }
 
     if (status) {
-      query = query.where(eq(dentalAppointments.status, status as any));
+      whereConditions.push(eq(dentalAppointments.status, status as any));
     }
 
-    const appointments = await query
+    let query = db.select().from(dentalAppointments);
+
+    const appointments = await (() => {
+      if (whereConditions.length > 0) {
+        return query.where(whereConditions.length === 1 ? whereConditions[0] : and(...whereConditions));
+      }
+      return query;
+    })()
       .orderBy(asc(dentalAppointments.appointmentDate))
       .limit(Number(limit))
       .offset(offset);
@@ -229,17 +236,24 @@ export const getDentalXrays = async (req: AuthenticatedRequest, res: Response) =
     const { patientId, xrayType, page = 1, limit = 10 } = req.query;
     const offset = (Number(page) - 1) * Number(limit);
 
-    let query = db.select().from(dentalXrays);
+    let whereConditions = [];
 
     if (patientId) {
-      query = query.where(eq(dentalXrays.patientId, patientId as string));
+      whereConditions.push(eq(dentalXrays.patientId, patientId as string));
     }
 
     if (xrayType) {
-      query = query.where(eq(dentalXrays.xrayType, xrayType as string));
+      whereConditions.push(eq(dentalXrays.xrayType, xrayType as string));
     }
 
-    const xrays = await query
+    let query = db.select().from(dentalXrays);
+
+    const xrays = await (() => {
+      if (whereConditions.length > 0) {
+        return query.where(whereConditions.length === 1 ? whereConditions[0] : and(...whereConditions));
+      }
+      return query;
+    })()
       .orderBy(desc(dentalXrays.takenDate))
       .limit(Number(limit))
       .offset(offset);
@@ -256,13 +270,13 @@ export const getDentalInventory = async (req: AuthenticatedRequest, res: Respons
   try {
     const { category, lowStock } = req.query;
 
-    let query = db.select().from(dentalInventory);
-
-    if (category) {
-      query = query.where(eq(dentalInventory.category, category as string));
-    }
-
-    const inventory = await query.orderBy(asc(dentalInventory.itemName));
+    const inventory = await (() => {
+      let query = db.select().from(dentalInventory);
+      if (category) {
+        return query.where(eq(dentalInventory.category, category as string));
+      }
+      return query;
+    })().orderBy(asc(dentalInventory.itemName));
 
     let filteredInventory = inventory;
     if (lowStock === 'true') {
